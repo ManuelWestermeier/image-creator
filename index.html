@@ -175,7 +175,7 @@
         const corsFrame = document.getElementById("cors-frame-container");
 
         // 🧠 Restore last prompt from localStorage
-        promptInput.value = localStorage.getItem("prompt") || "high quality picture of:";
+        promptInput.value = localStorage.getItem("prompt") || "high quality picture of: ";
 
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
