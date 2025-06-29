@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Generator</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #111;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            margin-top: 20px;
+            cursor: pointer;
+            border-radius: 10px;
+            border: none;
+            background: #29b;
+            color: white;
+        }
+
+        #image {
+            max-width: 90%;
+            max-height: 80vh;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        #cors-frame-container {
+            position: absolute;
+            top: 244.8px;
+            left: 8px;
+            width: 288.55px;
+            height: 21.2px;
+            overflow: hidden;
+            z-index: 100;
+            pointer-events: auto;
+        }
+
+        #cors-frame {
+            width: 100%;
+            height: 160px;
+            border: none;
+            transform: translateY(-230px);
+        }
+
+        #notice {
+            margin-top: 20px;
+            color: #f66;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Image Generator</h1>
+    <button id="generateBtn">Generate Image</button>
+    <div id="notice"></div>
+    <img id="image" src="" alt="" style="display:none" />
+    <div id="cors-frame-container" style="display: none;">
+        <iframe id="cors-frame" src="https://cors-anywhere.herokuapp.com/corsdemo" allow="clipboard-write"></iframe>
+    </div>
+
+    <script>
+        const btn = document.getElementById("generateBtn");
+        const img = document.getElementById("image");
+        const notice = document.getElementById("notice");
+        const corsFrame = document.getElementById("cors-frame-container");
+
+        async function generateImage(useProxy = true) {
+            try {
+                btn.disabled = true;
+                notice.textContent = "Generating image...";
+
+                const proxy = useProxy ? "https://cors-anywhere.herokuapp.com/" : "";
+                const url = "https://backend.getjuicy.ai/api/aiimage/generate-free";
+
+                const res = await fetch(proxy + url, {
+                    method: "POST",
+                    headers: {
+                        accept: "application/json, text/plain, */*",
+                        "accept-language": "de",
+                        authorization: "null",
+                        "content-type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        prompt: "(best quality), 1woman, pubic hair, German",
+                        negative_prompt: "(worst quality:1.4), (low quality:1.4)",
+                        seed: -1,
+                        subseed: -1,
+                        subseed_strength: 0,
+                        seed_resize_from_h: -1,
+                        seed_resize_from_w: -1,
+                        enable_hr: false,
+                        hr_scale: null,
+                        hr_upscaler: null,
+                        sampler_name: "DPM++ 2M",
+                        scheduler: "Karras",
+                        batch_size: 1,
+                        n_iter: 1,
+                        steps: 22,
+                        cfg_scale: 7,
+                        width: 512,
+                        height: 768,
+                        restore_faces: false,
+                        tiling: false,
+                        do_not_save_samples: false,
+                        do_not_save_grid: false,
+                        override_settings: {
+                            sd_model_checkpoint: "photogasm.safetensors",
+                            CLIP_stop_at_last_layers: 2,
+                            sd_vae: "vae-ft-mse-840000-ema-pruned.ckpt.vae.pt"
+                        },
+                        override_settings_restore_afterwards: false,
+                        disable_extra_networks: false,
+                        sampler_index: "DPM++ 2M",
+                        send_images: true,
+                        save_images: false,
+                        alwayson_scripts: {
+                            ADetailer: {
+                                args: [{ ad_model: "face_yolov8n.pt" }]
+                            }
+                        }
+                    })
+                });
+
+                const json = await res.json();
+                const base64 = json.imageUrl;
+
+                if (!base64 || typeof base64 !== "string") throw new Error("Invalid response");
+
+                img.src = `data:image/png;base64,${base64}`;
+                img.style.display = "block";
+                notice.textContent = "";
+            } catch (err) {
+                if (useProxy) {
+                    notice.innerHTML = `CORS Proxy blockiert. Bitte <strong>unten klicken</strong> um zu aktivieren.`;
+                    corsFrame.style.display = "block";
+                } else {
+                    notice.textContent = "Fehler beim Generieren.";
+                }
+                btn.disabled = false;
+                console.error("Fehler beim Generieren:", err);
+            }
+        }
+
+        btn.addEventListener("click", async () => {
+            if (corsFrame.style.display === "block") {
+                // Retry after user clicked iframe
+                corsFrame.style.display = "none";
+                notice.textContent = "Erneuter Versuch nach Freigabe...";
+                setTimeout(() => generateImage(true), 3000);
+            } else {
+                generateImage(true);
+            }
+        });
+    </script>
+</body>
+
+</html>
