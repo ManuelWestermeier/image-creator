@@ -253,7 +253,7 @@
                 notice.textContent = "";
             } catch (err) {
                 if (useProxy) {
-                    notice.innerHTML = `CORS Proxy blockiert. Bitte <strong>"Enable Access"</strong> um zu aktivieren.`;
+                    notice.innerHTML = `CORS Proxy blockiert. Bitte <strong>"Request temporaryy access...</strong> um zu aktivieren. Danach bitte erneut versuchen. `;
                     corsFrame.style.display = "block";
                 } else {
                     notice.textContent = "Fehler beim Generieren.";
