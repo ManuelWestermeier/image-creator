@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Image Generator</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
+        * { box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', sans-serif;
             background: #0e0e0e;
@@ -22,17 +18,13 @@
             margin: 0;
             padding: 20px;
         }
-
         h1 {
             font-size: 2.5rem;
             margin-bottom: 1rem;
             color: #00d4ff;
             text-shadow: 0 0 8px #00d4ff80;
         }
-
-        input[type="text"],
-        input[type="number"],
-        select {
+        input[type="text"], input[type="number"], select {
             padding: 12px 16px;
             font-size: 1rem;
             width: 100%;
@@ -45,13 +37,9 @@
             margin-bottom: 1rem;
             transition: border 0.2s ease;
         }
-
-        input[type="text"]:focus,
-        input[type="number"]:focus,
-        select:focus {
+        input[type="text"]:focus, input[type="number"]:focus, select:focus {
             border-color: #00d4ff;
         }
-
         button {
             padding: 12px 24px;
             font-size: 1rem;
@@ -62,30 +50,17 @@
             cursor: pointer;
             transition: background 0.2s ease, transform 0.1s ease;
         }
-
-        button:hover {
-            background: #00bde3;
-        }
-
-        button:active {
-            transform: scale(0.97);
-        }
-
-        #notice {
-            margin-top: 20px;
-            font-weight: 500;
-            color: #f66;
-        }
-
+        button:hover { background: #00bde3; }
+        button:active { transform: scale(0.97); }
+        #notice { margin-top: 20px; font-weight: 500; color: #f66; }
         #image {
             max-width: 100%;
             max-height: 70vh;
             margin-top: 20px;
             border-radius: 12px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(255,255,255,0.15);
             display: none;
         }
-
         .loader {
             margin-top: 30px;
             font-size: 32px;
@@ -101,79 +76,13 @@
             transform: scale(0);
             transition: transform 0.3s ease;
         }
-
-        .loader:before {
-            content: "Loading";
-        }
-
-        @keyframes l1 {
-            to {
-                background-size: 120% 100%;
-            }
-        }
-
-        #cors-frame-container {
-            display: none;
-            margin-top: 2rem;
-            border-radius: 1rem;
-            overflow: hidden;
-            border: 2px solid #00d4ff60;
-            background: #111;
-            position: relative;
-        }
-
-        #cors-frame {
-            width: 300px;
-            height: 250px;
-            border: none;
-        }
-
-        .wrapper {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 100, 100, 0.3);
-            pointer-events: none;
-        }
-
-        .wrapper button {
-            position: absolute;
-            top: 150px;
-            left: 15px;
-            width: 270px;
-            padding: 12px;
-            background: #ff5566;
-            border-radius: 1rem;
-            font-weight: bold;
-            font-size: 1rem;
-        }
-
-        iframe {
-            background-color: #5e5e5e;
-        }
-
-        details {
-            max-width: 400px;
-            margin-bottom: 1rem;
-        }
-
-        details label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        details input,
-        details select {
-            margin-top: 4px;
-            margin-bottom: 12px;
-            width: 100%;
-        }
+        .loader:before { content: "Loading"; }
+        @keyframes l1 { to { background-size: 120% 100%; } }
+        details { max-width: 400px; margin-bottom: 1rem; }
+        details label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        details input, details select { margin-top: 4px; margin-bottom: 12px; width: 100%; }
     </style>
 </head>
-
 <body>
     <h1>Image Generator</h1>
 
@@ -182,24 +91,11 @@
 
         <details>
             <summary>⚙️ Advanced Settings</summary>
-            <label>
-                Width:
-                <input type="number" id="widthInput" value="512" min="64" max="2048" step="64" />
-            </label>
-            <label>
-                Height:
-                <input type="number" id="heightInput" value="768" min="64" max="2048" step="64" />
-            </label>
-            <label>
-                Steps:
-                <input type="number" id="stepsInput" value="22" min="1" max="100" />
-            </label>
-            <label>
-                CFG Scale:
-                <input type="number" id="cfgInput" value="7" step="0.5" min="1" max="20" />
-            </label>
-            <label>
-                Sampler:
+            <label>Width: <input type="number" id="widthInput" value="512" min="64" max="2048" step="64" /></label>
+            <label>Height: <input type="number" id="heightInput" value="768" min="64" max="2048" step="64" /></label>
+            <label>Steps: <input type="number" id="stepsInput" value="22" min="1" max="100" /></label>
+            <label>CFG Scale: <input type="number" id="cfgInput" value="7" step="0.5" min="1" max="20" /></label>
+            <label>Sampler:
                 <select id="samplerInput">
                     <option value="DPM++ 2M">DPM++ 2M</option>
                     <option value="Euler a">Euler a</option>
@@ -215,33 +111,29 @@
     <img id="image" src="" alt="Generated" />
     <div id="loader" class="loader"></div>
 
-    <div id="cors-frame-container">
-        <iframe id="cors-frame" src="https://cors-anywhere.herokuapp.com/corsdemo" allow="clipboard-write"></iframe>
-        <div class="wrapper" style="display: none;">
-            <button>Enable Access</button>
-        </div>
-    </div>
-
     <script>
+        async function fetchViaProxyJSON(url, options) {
+            const res = await fetch("https://corsproxy.io/?" + encodeURIComponent(url), options);
+            return res.json();
+        }
+
         const form = document.getElementById("generateForm");
         const btn = form.querySelector("button");
         const promptInput = document.getElementById("promptInput");
         const img = document.getElementById("image");
         const notice = document.getElementById("notice");
-        const corsFrame = document.getElementById("cors-frame-container");
 
         // Restore last prompt
         promptInput.value = localStorage.getItem("prompt") || "high quality picture of: a house";
 
-        form.addEventListener("submit", async (e) => {
+        form.addEventListener("submit", (e) => {
             e.preventDefault();
             localStorage.setItem("prompt", promptInput.value);
-            generateImage(true);
+            generateImage();
         });
 
-        async function generateImage(useProxy = true) {
+        async function generateImage() {
             document.getElementById("loader").style.transform = "scale(1)";
-            corsFrame.style.display = "none";
             img.style.display = "none";
             btn.disabled = true;
             notice.textContent = "Generating image...";
@@ -253,70 +145,43 @@
             const sampler = document.getElementById("samplerInput").value || "DPM++ 2M";
 
             try {
-                const proxy = useProxy ? "https://cors-anywhere.herokuapp.com/" : "";
                 const url = "https://backend.getjuicy.ai/api/aiimage/generate-free";
 
-                const res = await fetch(proxy + url, {
+                const json = await fetchViaProxyJSON(url, {
                     method: "POST",
                     headers: {
                         accept: "application/json, text/plain, */*",
-                        "accept-language": "de",
-                        authorization: "null",
                         "content-type": "application/json",
                     },
                     body: JSON.stringify({
                         prompt: promptInput.value,
                         negative_prompt: "(worst quality:1.4), (low quality:1.4)",
-                        seed: -1,
-                        subseed: -1,
-                        subseed_strength: 0,
-                        seed_resize_from_h: -1,
-                        seed_resize_from_w: -1,
-                        enable_hr: false,
+                        steps,
+                        cfg_scale: cfgScale,
                         sampler_name: sampler,
-                        scheduler: "Karras",
+                        sampler_index: sampler,
+                        width,
+                        height,
+                        seed: -1,
                         batch_size: 1,
                         n_iter: 1,
-                        steps: steps,
-                        cfg_scale: cfgScale,
-                        width: width,
-                        height: height,
-                        restore_faces: false,
-                        tiling: false,
                         override_settings: {
                             sd_model_checkpoint: "photogasm.safetensors",
                             CLIP_stop_at_last_layers: 2,
                             sd_vae: "vae-ft-mse-840000-ema-pruned.ckpt.vae.pt",
                         },
-                        override_settings_restore_afterwards: false,
-                        disable_extra_networks: false,
-                        sampler_index: sampler,
-                        send_images: true,
-                        save_images: false,
-                        alwayson_scripts: {
-                            ADetailer: {
-                                args: [{ ad_model: "face_yolov8n.pt" }],
-                            },
-                        },
                     }),
                 });
 
-                const json = await res.json();
                 const base64 = json.imageUrl;
-                if (!base64 || typeof base64 !== "string")
-                    throw new Error("Invalid response");
+                if (!base64) throw new Error("Invalid response");
 
                 img.src = `data:image/png;base64,${base64}`;
                 img.style.display = "block";
                 notice.textContent = "";
             } catch (err) {
-                if (useProxy) {
-                    notice.innerHTML = `CORS Proxy blockiert. Bitte <strong>"Request temporary access..."</strong> klicken. Dann erneut versuchen.`;
-                    corsFrame.style.display = "block";
-                } else {
-                    notice.textContent = "Fehler beim Generieren.";
-                }
-                console.error("Fehler beim Generieren:", err);
+                notice.textContent = "Fehler beim Generieren.";
+                console.error("Fehler:", err);
             }
 
             document.getElementById("loader").style.transform = "scale(0)";
@@ -324,5 +189,4 @@
         }
     </script>
 </body>
-
 </html>
